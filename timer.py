@@ -5,6 +5,7 @@ import time
 import datetime
 
 SCREEN_RES = (640, 480)
+NUMBER_DATAPOINTS_GRAPHED_MAX = 250
 
 def repr(score):
     minute = score // 60
@@ -38,6 +39,35 @@ def avg(array):
         return 0
 
     return sum(array) / len(array)
+
+# The plan is to draw a praph in the background of the progress
+def draw_background(screen, times):
+    minimum = min(times)
+    maximum = max(times)
+
+    difference = maximum - minimum
+    # go over and under by 10 percent
+    low = minimum - difference * 0.1
+    high = maximum + difference * 0.1
+    difference = high - low
+
+    num = len(times)
+
+    start = SCREEN_RES[0] * 0.05
+    end = SCREEN_RES[0] - SCREEN_RES[0] * 0.05
+
+    step = (end - start) / num
+
+    last_x = 0
+    last_y = 0
+
+    for i, time in enumerate(times):
+        x = step * i + start
+        y = SCREEN_RES[1] - SCREEN_RES[1] * ((time - low) / difference)
+        if last_x != 0 and last_y != 0:
+            pygame.draw.line(screen, (50, 50, 50), (x, y), (last_x, last_y), 5)
+        
+        last_x, last_y = x, y
 
 def main():
     pygame.init()
@@ -90,6 +120,8 @@ def main():
             color = (0, 0, 255)
 
         pygame.draw.rect(screen, (0,0,0), (0,0,screen.get_width(), screen.get_height()))
+
+        draw_background(screen, times[-NUMBER_DATAPOINTS_GRAPHED_MAX:])
 
         text = pygame.font.Font(None, 150).render("{0:.2f}".format(end_time - start_time),
                                                  1, color)
