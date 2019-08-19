@@ -19,10 +19,22 @@ def save(score):
     file.write(entry)
     file.close()
 
+def avg(array):
+    if len(array) == 0:
+        return 0
+
+    sum = 0
+    for i in array:
+        sum += i
+
+    return sum / len(array)
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_RES)
     clock = pygame.time.Clock()
+
+    times = []
 
     start_time = 0
     end_time = 0
@@ -48,6 +60,7 @@ def main():
                 going = False
                 finishing = True
                 save(end_time - start_time)
+                times.append(end_time - start_time)
         elif ready:
             ready = False
             going = True
@@ -71,6 +84,19 @@ def main():
         text = pygame.font.Font(None, 150).render("{0:.2f}".format(end_time - start_time),
                                                  1, color)
         screen.blit(text, (640 / 2 - 75, 480 / 2 - 75))
+
+        if len(times) > 0:
+            text = pygame.font.Font(None, 50).render("min: {0:.2f}".format(min(times)),
+                                                     1, (255,255,255))
+            screen.blit(text, (50, 350))
+            
+            text = pygame.font.Font(None, 50).render("avg-5: {0:.2f}".format(avg(times[-5:])),
+                                                     1, (255,255,255))
+            screen.blit(text, (50, 400))
+            
+            text = pygame.font.Font(None, 50).render("avg-12: {0:.2f}".format(avg(times[-12:])),
+                                                     1, (255,255,255))
+            screen.blit(text, (350, 350))
 
         clock.tick(60)
         pygame.display.update()
