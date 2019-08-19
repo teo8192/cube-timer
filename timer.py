@@ -62,7 +62,7 @@ def draw_background(screen, times):
     start = SCREEN_RES[0] * 0.05
     end = SCREEN_RES[0] - SCREEN_RES[0] * 0.05
 
-    step = (end - start) / num
+    step = (end - start) / (num - 1)
 
     last_x = 0
     last_y = 0
