@@ -1,7 +1,23 @@
+#!/bin/env python3
+
 import pygame
 import time
+import datetime
 
 SCREEN_RES = (640, 480)
+
+def repr(score):
+    minute = score // 60
+    seconds = score - minute
+    return "{0:n}:{1:.3f}".format(minute, seconds)
+
+def save(score):
+    entry = "3x3x3;{};None;{};no;no;None".format(repr(score), datetime.datetime.now())
+    print(entry)
+    file = open("save.csv", "a")
+
+    file.write(entry)
+    file.close()
 
 def main():
     pygame.init()
@@ -31,6 +47,7 @@ def main():
             elif going:
                 going = False
                 finishing = True
+                save(end_time - start_time)
         elif ready:
             ready = False
             going = True
