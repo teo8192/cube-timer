@@ -95,7 +95,7 @@ def main():
                                                  1, color)
         screen.blit(text, (640 / 2 - 75, 480 / 2 - 75))
 
-        if len(times) > 0:
+        if len(times) > 0 and (not going or ready):
             text = pygame.font.Font(None, 50).render("min: {0:.2f}".format(min(times)),
                                                      1, (255,255,255))
             screen.blit(text, (50, 350))
