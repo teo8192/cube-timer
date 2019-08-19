@@ -12,29 +12,39 @@ def repr(score):
     return "{0:n}:{1:.3f}".format(minute, seconds)
 
 def save(score):
-    entry = "3x3x3;{};None;{};no;no;None".format(repr(score), datetime.datetime.now())
-    print(entry)
+    entry = "3x3x3;{};None;{};no;no;None\n".format(repr(score), datetime.datetime.now())
     file = open("save.csv", "a")
 
     file.write(entry)
     file.close()
 
+def parse(time):
+    min, sec = time.split(":", 1)
+    return float(min) * 60 + float(sec)
+
+def load():
+    times = []
+    file = open("save.csv", "r")
+    for line in file.readlines():
+        fields = line.split(";", 10)
+        times.append(parse(fields[1]))
+
+    file.close()
+
+    return times
+
 def avg(array):
     if len(array) == 0:
         return 0
 
-    sum = 0
-    for i in array:
-        sum += i
-
-    return sum / len(array)
+    return sum(array) / len(array)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_RES)
     clock = pygame.time.Clock()
 
-    times = []
+    times = load()
 
     start_time = 0
     end_time = 0
@@ -97,6 +107,10 @@ def main():
             text = pygame.font.Font(None, 50).render("avg-12: {0:.2f}".format(avg(times[-12:])),
                                                      1, (255,255,255))
             screen.blit(text, (350, 350))
+
+            text = pygame.font.Font(None, 50).render("n: {}".format(len(times)),
+                                                     1, (255,255,255))
+            screen.blit(text, (350, 400))
 
         clock.tick(60)
         pygame.display.update()
