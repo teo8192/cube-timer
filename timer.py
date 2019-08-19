@@ -25,14 +25,17 @@ def parse(time):
 
 def load():
     times = []
-    file = open("save.csv", "r")
-    for line in file.readlines():
-        fields = line.split(";", 10)
-        times.append(parse(fields[1]))
+    try:
+        file = open("save.csv", "r")
+        for line in file.readlines():
+            fields = line.split(";", 10)
+            times.append(parse(fields[1]))
 
-    file.close()
+        file.close()
 
-    return times
+        return times
+    except:
+        return []
 
 def avg(array):
     if len(array) == 0:
@@ -42,6 +45,9 @@ def avg(array):
 
 # The plan is to draw a praph in the background of the progress
 def draw_background(screen, times):
+    if len(times) < 2:
+        return
+
     minimum = min(times)
     maximum = max(times)
 
