@@ -9,7 +9,7 @@ NUMBER_DATAPOINTS_GRAPHED_MAX = 250
 
 def repr(score):
     minute = score // 60
-    seconds = score - minute
+    seconds = score % 60
     return "{0:n}:{1:.3f}".format(minute, seconds)
 
 def save(score):
