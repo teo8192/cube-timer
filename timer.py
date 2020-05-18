@@ -3,6 +3,7 @@
 import pygame
 import time
 import datetime
+from scrambler import scramble
 
 SCREEN_RES = (640, 480)
 NUMBER_DATAPOINTS_GRAPHED_MAX = 250
@@ -89,6 +90,8 @@ def main():
     going = False
     finishing = False
 
+    scr = scramble()
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -107,6 +110,7 @@ def main():
                 finishing = True
                 save(end_time - start_time)
                 times.append(end_time - start_time)
+                scr = scramble()
         elif ready:
             ready = False
             going = True
@@ -131,7 +135,12 @@ def main():
 
         text = pygame.font.Font(None, 150).render("{0:.2f}".format(end_time - start_time),
                                                  1, color)
-        screen.blit(text, (640 / 2 - 75, 480 / 2 - 75))
+        screen.blit(text, (int(640 / 2 - 75), int(480 / 2 - 75)))
+
+        if not going:
+            text = pygame.font.Font(None, 25).render("{}".format(scr),
+                                                     1, (255,255,255))
+            screen.blit(text, (0, 0))
 
         if len(times) > 0 and (not going or ready):
             text = pygame.font.Font(None, 50).render("min: {0:.2f}".format(min(times)),
